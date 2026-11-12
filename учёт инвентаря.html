@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учёт оборудования — КИSДСЦ</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background: #f4f6f9; color: #222; }
+        input[name="nav"], input[name="theme"] { display: none; }
+        .wrapper { min-height: 100vh; padding: 15px; border-radius: 12px; background: #f4f6f9; color: #222; }
+
+        /* Тёмная тема */
+        #theme-dark:checked ~ .wrapper { background: #121212; color: #f3f4f6; }
+        #theme-dark:checked ~ .wrapper .card,
+        #theme-dark:checked ~ .wrapper header,
+        #theme-dark:checked ~ .wrapper nav { background: #1e1e1e; border-color: #333; }
+        #theme-dark:checked ~ .wrapper input,
+        #theme-dark:checked ~ .wrapper select { background: #2a2a2a; color: #fff; border-color: #444; }
+        #theme-dark:checked ~ .wrapper th,
+        #theme-dark:checked ~ .wrapper td { border-bottom-color: #333; }
+
+        /* Тема с котами */
+        #theme-cats:checked ~ .wrapper { background-color: #ffe4e1; background-repeat: repeat; background-size: 160px; color: #4a2511; }
+        #theme-cats:checked ~ .wrapper .card,
+        #theme-cats:checked ~ .wrapper header,
+        #theme-cats:checked ~ .wrapper nav { background: rgba(255, 250, 240, 0.94); border-color: #f59e0b; }
+
+        #theme-light:checked ~ .wrapper label[for="theme-light"],
+        #theme-dark:checked ~ .wrapper label[for="theme-dark"],
+        #theme-cats:checked ~ .wrapper label[for="theme-cats"] { background: #2563eb; color: #fff; }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        header, nav, .card { background: #fff; padding: 18px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px; }
+        header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        h1 { margin: 0; font-size: 1.4rem; }
+        h2 { margin-top: 0; font-size: 1.2rem; }
+        .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+        .profile-box { border: 1px dashed #999; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; }
+
+        .breadcrumb-btn { display: inline-block; width: 7px; height: 7px; background: #2563eb; border-radius: 50%; cursor: pointer; vertical-align: middle; margin-left: 5px; }
+        .breadcrumb-btn:hover { transform: scale(1.8); background: #dc2626; }
+
+        nav { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tab-label { padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; user-select: none; }
+
+        #nav-1:checked ~ .wrapper label[for="nav-1"],
+        #nav-2:checked ~ .wrapper label[for="nav-2"],
+        #nav-3:checked ~ .wrapper label[for="nav-3"],
+        #nav-4:checked ~ .wrapper label[for="nav-4"],
+        #nav-5:checked ~ .wrapper label[for="nav-5"],
+        #nav-6:checked ~ .wrapper label[for="nav-6"] { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+        .page { display: none; }
+        #nav-1:checked ~ .wrapper #page-1 { display: block; }
+        #nav-2:checked ~ .wrapper #page-2 { display: block; }
+        #nav-3:checked ~ .wrapper #page-3 { display: block; }
+        #nav-4:checked ~ .wrapper #page-4 { display: block; }
+        #nav-5:checked ~ .wrapper #page-5 { display: block; }
+        #nav-6:checked ~ .wrapper #page-6 { display: block; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: #fff; display: inline-block; }
+        .free { background: #16a34a; }
+        .busy { background: #dc2626; }
+
+        .btn { display: inline-block; padding: 10px 16px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .btn-green { background: #16a34a; }
+        .btn-red { background: #dc2626; }
+
+        .form-group { margin-bottom: 12px; max-width: 450px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+        .theme-btn { display: inline-block; padding: 10px 16px; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: bold; margin-right: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <input type="radio" name="nav" id="nav-1" checked>
+    <input type="radio" name="nav" id="nav-2">
+    <input type="radio" name="nav" id="nav-3">
+    <input type="radio" name="nav" id="nav-4">
+    <input type="radio" name="nav" id="nav-5">
+    <input type="radio" name="nav" id="nav-6">
+
+    <input type="radio" name="theme" id="theme-light" checked>
+    <input type="radio" name="theme" id="theme-dark">
+    <input type="radio" name="theme" id="theme-cats">
+
+    <div class="wrapper" id="main-wrapper">
+        <div class="container">
+            <header>
+                <div>
+                    <h1>Учёт оборудования в кабинете</h1>
+                    <div class="subtitle">Команда: КИSДСЦ | Главная ценность: Землинский</div>
+                </div>
+                <div class="profile-box">
+                    👤 Профиль: <b id="profile-name">Землинский</b><br>
+                    <small>Выдать/вернуть:</small>
+                    <label for="nav-6" class="breadcrumb-btn" title="Выдача и возврат"></label>
+                </div>
+            </header>
+
+            <nav>
+                <label for="nav-1" class="tab-label">📋 Список оборудования (Т1)</label>
+                <label for="nav-2" class="tab-label">➕ Добавить оборудование</label>
+                <label for="nav-3" class="tab-label">🔒 Занятое (Т3)</label>
+                <label for="nav-4" class="tab-label">🕒 Кто и когда взял (Т6)</label>
+                <label for="nav-5" class="tab-label">⚙️ Настройки и тема (Т4, Т5)</label>
+                <label for="nav-6" class="tab-label">🔄 Выдача / Возврат (Т2)</label>
+            </nav>
+
+            <!-- СТРАНИЦА 1 -->
+            <div id="page-1" class="card page">
+                <h2>Список оборудования в кабинете (Т1)</h2>
+                <label for="nav-2" class="btn">+ Добавить новое оборудование</label>
+                <table>
+                    <thead>
+                        <tr><th>Инв. №</th><th>Название</th><th>Категория</th><th>Статус</th><th>У кого сейчас</th></tr>
+                    </thead>
+                    <tbody id="all-equipment-body"></tbody>
+                </table>
+            </div>
+
+            <!-- СТРАНИЦА 2 -->
+            <div id="page-2" class="card page">
+                <h2>➕ Добавить новое оборудование</h2>
+                <div class="form-group">
+                    <label for="eq-inv">Инвентарный номер</label>
+                    <input type="text" id="eq-inv" placeholder="Например: INV-105">
+                </div>
+                <div class="form-group">
+                    <label for="eq-name">Название оборудования</label>
+                    <input type="text" id="eq-name" placeholder="Например: Ноутбук Lenovo ThinkPad">
+                </div>
+                <div class="form-group">
+                    <label for="eq-cat">Категория</label>
+                    <select id="eq-cat">
+                        <option value="Ноутбуки">Ноутбуки</option>
+                        <option value="Периферия">Периферия</option>
+                        <option value="Проекторы и экраны">Проекторы и экраны</option>
+                        <option value="Кабели и переходники">Кабели и переходники</option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-green" onclick="addEquipment()">Сохранить оборудование</button>
+            </div>
+
+            <!-- СТРАНИЦА 3 -->
+            <div id="page-3" class="card page">
+                <h2>🔒 Занятое оборудование (Т3)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Инв. №</th><th>Название</th><th>Кто взял</th><th>Когда взял</th><th>Действие</th></tr>
+                    </thead>
+                    <tbody id="busy-equipment-body"></tbody>
+                </table>
+            </div>
+
+            <!-- СТРАНИЦА 4 -->
+            <div id="page-4" class="card page">
+                <h2>🕒 Журнал: кто и когда взял (Т6)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Дата и время</th><th>Оборудование</th><th>Сотрудник</th><th>Операция</th></tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+            </div>
+
+            <!-- СТРАНИЦА 5 -->
+            <div id="page-5" class="card page">
+                <h2>⚙️ Настройки и выбор темы (Т4, Т5)</h2>
+                <p>Выберите оформление интерфейса:</p>
+                <div style="margin-bottom: 15px;">
+                    <label for="theme-light" class="theme-btn" onclick="applyCatBg(false)">☀️ Светлая тема</label>
+                    <label for="theme-dark" class="theme-btn" onclick="applyCatBg(false)">🌙 Тёмная тема (Т5)</label>
+                    <label for="theme-cats" class="theme-btn" onclick="applyCatBg(true)">🐈 Тема с котами (Т4)</label>
+                </div>
+                <div class="form-group">
+                    <label for="user-input">Текущий пользователь в профиле:</label>
+                    <input type="text" id="user-input" value="Землинский">
+                </div>
+                <button type="button" class="btn" onclick="updateProfile()">Обновить имя профиля</button>
+                <button type="button" class="btn btn-red" onclick="resetDemoData()" style="margin-left: 8px;">Сбросить данные</button>
+            </div>
+
+            <!-- СТРАНИЦА 6 -->
+            <div id="page-6" class="card page">
+                <h2>🔄 Выдача и возврат оборудования (Т2)</h2>
+                <h3>Выдать свободное оборудование</h3>
+                <div class="form-group">
+                    <label for="issue-select">Выберите свободное оборудование</label>
+                    <select id="issue-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="issue-person">Кому выдаётся (ФИО / Фамилия)</label>
+                    <input type="text" id="issue-person" placeholder="Например: Землинский">
+                </div>
+                <button type="button" class="btn" onclick="issueEquipment()">Выдать оборудование</button>
+                <h3>Быстрый возврат</h3>
+                <div id="return-list"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const defaultEquipment = [
+            { id: 'INV-001', name: 'Ноутбук ASUS VivoBook', category: 'Ноутбуки', status: 'free', holder: '—', takenAt: '' },
+            { id: 'INV-002', name: 'Проектор Epson EB-X06', category: 'Проекторы и экраны', status: 'busy', holder: 'Землинский', takenAt: '11.11.2026 09:00' },
+            { id: 'INV-003', name: 'Презентер Logitech R400', category: 'Периферия', status: 'free', holder: '—', takenAt: '' },
+            { id: 'INV-004', name: 'Кабель HDMI 5м', category: 'Кабели и переходники', status: 'busy', holder: 'Иванов А.', takenAt: '10.11.2026 16:40' }
+        ];
+
+        const defaultHistory = [
+            { time: '11.11.2026 09:00', item: 'Проектор Epson EB-X06 (INV-002)', person: 'Землинский', action: 'Выдано' },
+            { time: '10.11.2026 16:40', item: 'Кабель HDMI 5м (INV-004)', person: 'Иванов А.', action: 'Выдано' }
+        ];
+
+        let equipment = JSON.parse(localStorage.getItem('kisdsc_eq')) || defaultEquipment;
+        let historyLog = JSON.parse(localStorage.getItem('kisdsc_hist')) || defaultHistory;
+        let savedUser = localStorage.getItem('kisdsc_user') || 'Землинский';
+
+        function saveData() {
+            localStorage.setItem('kisdsc_eq', JSON.stringify(equipment));
+            localStorage.setItem('kisdsc_hist', JSON.stringify(historyLog));
+        }
+
+        function getNow() {
+            const d = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function renderAll() {
+            document.getElementById('profile-name').textContent = savedUser;
+            document.getElementById('user-input').value = savedUser;
+
+            document.getElementById('all-equipment-body').innerHTML = equipment.map(item => `
+                <tr>
+                    <td><b>${item.id}</b></td>
+                    <td>${item.name}</td>
+                    <td>${item.category}</td>
+                    <td><span class="badge ${item.status}">${item.status === 'free' ? 'Свободно' : 'Занято'}</span></td>
+                    <td>${item.holder}</td>
+                </tr>
+            `).join('');
+
+            const busyItems = equipment.filter(i => i.status === 'busy');
+            const busyBody = document.getElementById('busy-equipment-body');
+            busyBody.innerHTML = busyItems.length === 0
+                ? `<tr><td colspan="5">Сейчас всё оборудование свободно.</td></tr>`
+                : busyItems.map(item => `
+                    <tr>
+                        <td><b>${item.id}</b></td>
+                        <td>${item.name}</td>
+                        <td>${item.holder}</td>
+                        <td>${item.takenAt}</td>
+                        <td><button type="button" class="btn btn-green" onclick="returnItem('${item.id}')">Вернуть</button></td>
+                    </tr>
+                `).join('');
+
+            document.getElementById('history-body').innerHTML = historyLog.map(h => `
+                <tr>
+                    <td>${h.time}</td>
+                    <td>${h.item}</td>
+                    <td><b>${h.person}</b></td>
+                    <td>${h.action}</td>
+                </tr>
+            `).join('');
+
+            const freeItems = equipment.filter(i => i.status === 'free');
+            document.getElementById('issue-select').innerHTML = freeItems.length === 0
+                ? `<option value="">Нет свободного оборудования</option>`
+                : freeItems.map(item => `<option value="${item.id}">${item.id} — ${item.name}</option>`).join('');
+
+            document.getElementById('return-list').innerHTML = busyItems.length === 0
+                ? `<div>Нет оборудования на руках для возврата.</div>`
+                : busyItems.map(item => `
+                    <div style="margin-bottom:8px;padding:10px;border:1px solid #ccc;border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+                        <span><b>${item.id}</b> — ${item.name} (у: <b>${item.holder}</b>)</span>
+                        <button type="button" class="btn btn-green" onclick="returnItem('${item.id}')">Принять возврат</button>
+                    </div>
+                `).join('');
+        }
+function applyCatBg(isCat) {
+            const wrapper = document.getElementById('main-wrapper');
+            if (!isCat) {
+                wrapper.style.backgroundImage = 'none';
+                return;
+            }
+            const catImg = "data:image/jpeg;base64,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";
+            wrapper.style.backgroundImage = `url("${catImg}")`;
+        }
+
+        function addEquipment() {
+            const id = document.getElementById('eq-inv').value.trim();
+            const name = document.getElementById('eq-name').value.trim();
+            const category = document.getElementById('eq-cat').value;
+            if (!id || !name) return alert('Заполните инвентарный номер и название!');
+            if (equipment.some(i => i.id.toLowerCase() === id.toLowerCase())) return alert('Такой инвентарный номер уже есть!');
+
+            equipment.push({ id, name, category, status: 'free', holder: '—', takenAt: '' });
+            saveData();
+            renderAll();
+            document.getElementById('eq-inv').value = '';
+            document.getElementById('eq-name').value = '';
+            document.getElementById('nav-1').checked = true;
+        }
+
+        function issueEquipment() {
+            const id = document.getElementById('issue-select').value;
+            const person = document.getElementById('issue-person').value.trim();
+            if (!id) return alert('Нет свободного оборудования!');
+            if (!person) return alert('Укажите, кому выдаётся оборудование!');
+
+            const item = equipment.find(i => i.id === id);
+            if (item) {
+                const now = getNow();
+                item.status = 'busy';
+                item.holder = person;
+                item.takenAt = now;
+                historyLog.unshift({ time: now, item: `${item.name} (${item.id})`, person, action: 'Выдано' });
+                saveData();
+                renderAll();
+                document.getElementById('issue-person').value = '';
+            }
+        }
+
+        function returnItem(id) {
+            const item = equipment.find(i => i.id === id);
+            if (item && item.status === 'busy') {
+                const prevHolder = item.holder;
+                item.status = 'free';
+                item.holder = '—';
+                item.takenAt = '';
+                historyLog.unshift({ time: getNow(), item: `${item.name} (${item.id})`, person: prevHolder, action: 'Возвращено' });
+                saveData();
+                renderAll();
+            }
+        }
+
+        function updateProfile() {
+            const val = document.getElementById('user-input').value.trim();
+            if (val) {
+                savedUser = val;
+                localStorage.setItem('kisdsc_user', savedUser);
+                document.getElementById('profile-name').textContent = savedUser;
+                alert('Имя профиля обновлено на: ' + savedUser);
+            }
+        }
+
+        function resetDemoData() {
+            localStorage.removeItem('kisdsc_eq');
+            localStorage.removeItem('kisdsc_hist');
+            localStorage.removeItem('kisdsc_user');
+            equipment = JSON.parse(JSON.stringify(defaultEquipment));
+            historyLog = JSON.parse(JSON.stringify(defaultHistory));
+            savedUser = 'Землинский';
+            renderAll();
+        }
+
+        renderAll();
+    </script>
+</body>
+</html>
